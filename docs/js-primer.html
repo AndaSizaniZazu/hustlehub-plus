@@ -1,0 +1,480 @@
+<title>HustleHub+ JavaScript Primer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Literata:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#eef4f8;
+    --paper-raised:#ffffff;
+    --ink:#16324f;
+    --ink-soft:#3c5875;
+    --line:#b9cedd;
+    --line-strong:#8fb0c6;
+    --accent:#1c7c8c;
+    --accent-ink:#ffffff;
+    --warm:#c97b3d;
+    --good:#2e7d46;
+    --danger:#b23a3a;
+    --code-bg:#e3edf3;
+    --shadow: 0 1px 2px rgba(22,50,79,.06), 0 6px 20px rgba(22,50,79,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0f2a44; --paper-raised:#123253; --ink:#dceaf3; --ink-soft:#9fbdd2;
+      --line:#244a68; --line-strong:#2f5c7e; --accent:#5fd0da; --accent-ink:#06232b;
+      --warm:#e3a868; --good:#6fcb8b; --danger:#e3726b; --code-bg:#0b2136;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f2a44; --paper-raised:#123253; --ink:#dceaf3; --ink-soft:#9fbdd2;
+    --line:#244a68; --line-strong:#2f5c7e; --accent:#5fd0da; --accent-ink:#06232b;
+    --warm:#e3a868; --good:#6fcb8b; --danger:#e3726b; --code-bg:#0b2136;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Literata', Georgia, 'Times New Roman', serif; line-height:1.65;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 36px 36px; background-attachment: local;
+    opacity:0; animation: settle .5s ease-out .05s forwards;
+  }
+  @keyframes settle{ to { opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ body{ animation:none; opacity:1; } html{ scroll-behavior:auto !important; } }
+  html{ scroll-behavior:smooth; }
+
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; font-weight:600; text-wrap:balance; color:var(--ink); margin:0 0 .4em; }
+  code, .mono, .pill, .eyebrow, .tag{ font-family:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; }
+  a{ color:var(--accent); }
+  a:focus-visible, summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .wrap{
+    max-width: 1180px; margin:0 auto; padding: 0 clamp(1.25rem,4vw,3rem) 6rem;
+    display:grid; grid-template-columns: 220px minmax(0,1fr); gap: clamp(1.5rem,4vw,3.5rem);
+  }
+  @media (max-width:880px){ .wrap{ grid-template-columns: 1fr; } }
+
+  .rail{ position:sticky; top:1.5rem; align-self:start; padding-top:3.2rem; }
+  @media (max-width:880px){ .rail{ position:static; padding-top:0; } }
+  .rail nav{ display:flex; flex-direction:column; gap:.1rem; border-left:2px solid var(--line); padding-left:1rem; }
+  @media (max-width:880px){
+    .rail nav{ flex-direction:row; overflow-x:auto; border-left:none; border-top:2px solid var(--line);
+      padding-left:0; padding-top:.75rem; gap:1rem; margin-bottom:1rem; }
+  }
+  .rail a{
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none; padding:.32rem 0; white-space:nowrap;
+  }
+  .rail a:hover{ color:var(--accent); }
+
+  header.hero{ padding: 3.5rem 0 1rem; max-width:62ch; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:.5rem; font-size:.72rem; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1rem; }
+  .eyebrow::before{ content:""; width:.5rem; height:.5rem; border-radius:50%; background:var(--accent); display:inline-block; }
+  header.hero h1{ font-size: clamp(2rem,4vw,2.8rem); }
+  header.hero p.lede{ font-size:1.12rem; color:var(--ink-soft); max-width:58ch; }
+
+  main{ min-width:0; }
+  section{ padding: 2.75rem 0; border-top:1px solid var(--line); scroll-margin-top:1.5rem; }
+  section:first-of-type{ border-top:none; }
+  .section-head{ display:flex; align-items:baseline; gap:.9rem; margin-bottom:1.3rem; }
+  .section-num{ font-family:'JetBrains Mono',monospace; font-size:.85rem; color:var(--accent);
+    border:1px solid var(--line-strong); border-radius:4px; padding:.05rem .4rem; }
+  section > p, section > ul, section > ol{ max-width:66ch; }
+  section h3{ font-size:1.15rem; margin-top:1.8rem; }
+  section h3 .tag{ font-size:.68rem; color:var(--ink-soft); font-weight:500; margin-left:.5rem; }
+
+  pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px; padding:.9rem 1.05rem;
+    overflow-x:auto; font-size:.85rem; line-height:1.55; margin:.9rem 0; max-width:70ch; }
+  pre code{ background:none; padding:0; }
+  p code, li code, dt code{ background:var(--code-bg); border:1px solid var(--line); border-radius:4px;
+    padding:.05rem .35rem; font-size:.85em; }
+
+  .filecard{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding: 1.2rem 1.3rem; box-shadow:var(--shadow); margin: 1.2rem 0; max-width:74ch;
+  }
+  .filecard .filename{
+    font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--accent);
+    display:flex; align-items:center; gap:.4rem; margin-bottom:.6rem;
+  }
+  .filecard .filename::before{ content:"📄"; font-size:.85em; }
+  .filecard pre{ margin:.4rem 0 0; }
+
+  .callout{
+    border-left:3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--paper-raised));
+    border-radius:0 8px 8px 0; padding:.9rem 1.1rem; margin:1.2rem 0; font-size:.95rem; max-width:66ch;
+  }
+  .callout strong{ color:var(--ink); }
+  .callout.warm{ border-left-color:var(--warm); background: color-mix(in srgb, var(--warm) 10%, var(--paper-raised)); }
+
+  .notes{ list-style:none; margin:1rem 0 0; padding:0; display:grid; gap:.7rem; max-width:70ch; }
+  .notes li{
+    position:relative; padding-left:1.6rem; font-size:.95rem; color:var(--ink-soft);
+  }
+  .notes li::before{
+    content:"→"; position:absolute; left:0; color:var(--accent); font-weight:600;
+  }
+  .notes li strong{ color:var(--ink); }
+
+  .compare{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); margin:1.2rem 0; max-width: 74ch; }
+  .compare .card{ background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem; box-shadow:var(--shadow); }
+  .compare .card h4{ margin:0 0 .5rem; font-family:'Fraunces',serif; font-size:.98rem; display:flex; align-items:center; gap:.4rem; }
+  .compare .card.no h4{ color:var(--danger); }
+  .compare .card.yes h4{ color:var(--good); }
+  .compare .card pre{ margin:.4rem 0 0; font-size:.8rem; }
+
+  dl.glossary{ display:grid; gap:.9rem; margin-top:1rem; max-width:74ch; }
+  dl.glossary div{ display:grid; grid-template-columns:160px 1fr; gap:.9rem; padding-bottom:.9rem; border-bottom:1px dashed var(--line); }
+  @media (max-width:600px){ dl.glossary div{ grid-template-columns:1fr; } }
+  dl.glossary dt{ font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--ink); font-size:.86rem; }
+  dl.glossary dd{ margin:0; color:var(--ink-soft); font-size:.94rem; }
+
+  .steps{ list-style:none; margin:1.2rem 0 0; padding:0; counter-reset:step; max-width:74ch; }
+  .steps > li{ counter-increment:step; position:relative; padding:.1rem 0 1.3rem 2.4rem; border-left:2px solid var(--line); margin-left:.55rem; }
+  .steps > li:last-child{ border-left-color:transparent; }
+  .steps > li::before{
+    content:counter(step); position:absolute; left:-.75rem; top:-.1rem; width:1.5rem; height:1.5rem;
+    background:var(--accent); color:var(--accent-ink); border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600;
+  }
+  .steps h4{ margin:0 0 .3rem; font-family:'Fraunces',serif; font-size:1rem; }
+  .steps p{ margin:0 0 .5rem; color:var(--ink-soft); font-size:.94rem; }
+
+  footer{ max-width:66ch; margin-top:1rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--ink-soft); }
+</style>
+
+<div class="wrap">
+  <aside class="rail">
+    <nav aria-label="Sections">
+      <a href="#start">Start here</a>
+      <a href="#running">Running JS</a>
+      <a href="#variables">Variables</a>
+      <a href="#functions">Functions</a>
+      <a href="#objects">Objects</a>
+      <a href="#template">Template strings</a>
+      <a href="#modules">Modules</a>
+      <a href="#async">Async / await</a>
+      <a href="#errors">try / catch</a>
+      <a href="#npm">npm &amp; JSON</a>
+      <a href="#walkthrough">Full walkthrough</a>
+      <a href="#cheatsheet">Cheat sheet</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero" id="start">
+      <div class="eyebrow">Companion notes · for a first-time JS reader</div>
+      <h1>JavaScript, from zero, using only this project's real code</h1>
+      <p class="lede">You don't need to know JavaScript yet to read this. Every idea here is explained once in plain English, then shown immediately in an actual line from the HustleHub+ backend — never a made-up example. By the end, the files in <code>backend/src/</code> should read like sentences instead of symbols.</p>
+    </header>
+
+    <section id="running">
+      <div class="section-head"><span class="section-num">01</span><h2>How JavaScript actually runs here</h2></div>
+      <p>In a browser, JavaScript runs inside the page. This project doesn't use a browser at all yet — it runs on <strong>Node.js</strong>, a program that lets JavaScript run directly on your computer, like Python or a compiled program would.</p>
+      <p>A <code>.js</code> file is just a text file of instructions. When you run:</p>
+      <pre><code>node src/server.js</code></pre>
+      <p>Node reads that file top to bottom and executes it. <code>nodemon</code> (what <code>npm run dev</code> actually calls) is the exact same thing, plus one convenience: it watches your files and restarts Node automatically every time you save.</p>
+      <div class="callout">
+        <strong>So what is "npm"?</strong> npm is Node's package manager — it downloads other people's JavaScript code (like <code>express</code> or <code>bcrypt</code>) into a folder called <code>node_modules</code> so your own code can use it. <code>npm install</code> does the downloading; <code>npm run dev</code> runs a named shortcut command listed in <code>package.json</code>.
+      </div>
+    </section>
+
+    <section id="variables">
+      <div class="section-head"><span class="section-num">02</span><h2>Variables — boxes with labels</h2></div>
+      <p>A variable is just a named box holding a value. This project only ever uses two ways to create one:</p>
+      <div class="compare">
+        <div class="card yes">
+          <h4>✓ <code>const</code></h4>
+          <p style="margin:0;color:var(--ink-soft);font-size:.9rem">The label is permanent — you can't reassign it later. Used for almost everything here, because almost nothing needs to change after it's created.</p>
+          <pre><code>const salt = await bcrypt.genSalt(12);</code></pre>
+        </div>
+        <div class="card yes">
+          <h4>✓ <code>let</code></h4>
+          <p style="margin:0;color:var(--ink-soft);font-size:.9rem">Same as <code>const</code>, but the value <em>can</em> be reassigned later. Rare in this codebase — most values are set once and never changed.</p>
+        </div>
+      </div>
+      <p>You may see an older codebase use <code>var</code> instead — this project deliberately never does. <code>var</code> has confusing rules about where it's visible; <code>const</code>/<code>let</code> fixed that, so modern code just doesn't use <code>var</code> anymore.</p>
+
+      <h3>The data types you'll actually see here</h3>
+      <ul class="notes">
+        <li><strong>String</strong> — text, always in quotes: <code>'client'</code>, <code>"Registration failed"</code></li>
+        <li><strong>Number</strong> — <code>12</code> in <code>bcrypt.genSalt(12)</code>, no quotes</li>
+        <li><strong>Boolean</strong> — <code>true</code> / <code>false</code>, e.g. <code>required: true</code> in <code>User.js</code></li>
+        <li><strong>Object</strong> — a labeled bundle of values, e.g. <code>{ id: user._id, role: user.role }</code> — its own section below</li>
+        <li><strong>undefined / null</strong> — "nothing here." A variable that was never given a value is <code>undefined</code>.</li>
+      </ul>
+    </section>
+
+    <section id="functions">
+      <div class="section-head"><span class="section-num">03</span><h2>Functions — reusable steps</h2></div>
+      <p>A function is a named block of steps you can run whenever you need them, optionally feeding it inputs. This codebase almost exclusively uses <strong>arrow functions</strong> — a shorter way to write a function, using <code>=&gt;</code>.</p>
+
+      <div class="filecard">
+        <div class="filename">backend/src/utils/token.js</div>
+        <pre><code>const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  );
+};</code></pre>
+      </div>
+      <ul class="notes">
+        <li><strong><code>generateToken</code></strong> is the name — the label you call it by elsewhere.</li>
+        <li><strong><code>(user)</code></strong> is the input it expects — here, one value called <code>user</code>.</li>
+        <li><strong><code>=&gt;</code></strong> means "goes to" / "produces" — everything after it is what the function does.</li>
+        <li><strong><code>{ ... }</code></strong> after the arrow is the function's body — the actual steps, wrapped in curly braces.</li>
+        <li><strong><code>return</code></strong> hands a value back to whoever called the function.</li>
+      </ul>
+
+      <h3>Why arrow functions specifically? <span class="tag">not just style</span></h3>
+      <p>Two real reasons this project uses them everywhere:</p>
+      <div class="compare">
+        <div class="card no">
+          <h4>Older style</h4>
+          <pre><code>function generateToken(user) {
+  return jwt.sign(/* ... */);
+}</code></pre>
+        </div>
+        <div class="card yes">
+          <h4>Arrow style (used here)</h4>
+          <pre><code>const generateToken = (user) => {
+  return jwt.sign(/* ... */);
+};</code></pre>
+        </div>
+      </div>
+      <p>Both do the same thing for a simple case like this. The real payoff shows up with <code>this</code>-binding in class-based code (not really used here) and, more relevantly, <strong>brevity when passing a function straight into another function</strong> — which is exactly what Express route handlers and middleware are:</p>
+      <div class="filecard">
+        <div class="filename">backend/src/server.js</div>
+        <pre><code>app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});</code></pre>
+      </div>
+      <p>Here, the whole <code>(req, res) =&gt; { ... }</code> is an anonymous (unnamed) arrow function, created right where it's needed and handed directly to <code>app.get</code> as "the code to run when this route is hit."</p>
+    </section>
+
+    <section id="objects">
+      <div class="section-head"><span class="section-num">04</span><h2>Objects &amp; destructuring</h2></div>
+      <p>An <strong>object</strong> bundles related values under labels (called "keys"), like a small form:</p>
+      <pre><code>{ name: 'Test User', email: 'test@example.com', role: 'client' }</code></pre>
+      <p>Every incoming API request body arrives as an object like this. <strong>Destructuring</strong> is the shorthand this project uses everywhere to pull specific fields straight out of one:</p>
+
+      <div class="filecard">
+        <div class="filename">backend/src/controllers/auth.controller.js</div>
+        <pre><code>const { name, email, password, role } = req.body;</code></pre>
+      </div>
+      <p>Without destructuring, the same line would be written four times over:</p>
+      <pre><code>const name = req.body.name;
+const email = req.body.email;
+const password = req.body.password;
+const role = req.body.role;</code></pre>
+      <p>Both do exactly the same thing — the destructured version just says "pull these four named fields out of <code>req.body</code>, and make each one its own variable" in one line.</p>
+
+      <h3>Dot access, the other way to reach into an object</h3>
+      <p>You'll also see the plain form throughout the codebase, when only one field is needed:</p>
+      <pre><code>user._id
+user.name
+user.passwordHash
+req.user.id</code></pre>
+      <p><code>object.key</code> always means "give me the value stored at this label."</p>
+
+      <h3>The shorthand property trick</h3>
+      <div class="filecard">
+        <div class="filename">backend/src/models/User.js → used in the controller</div>
+        <pre><code>const existing = await User.findOne({ email });</code></pre>
+      </div>
+      <p>This is shorthand for <code>{ email: email }</code> — when a variable's name and the key you want match exactly, JavaScript lets you write it once instead of twice.</p>
+    </section>
+
+    <section id="template">
+      <div class="section-head"><span class="section-num">05</span><h2>Template strings — text with variables mixed in</h2></div>
+      <p>Backtick strings (using <code>`</code> instead of <code>'</code> or <code>"</code>) let you drop a variable straight into text using <code>${ }</code>:</p>
+      <div class="filecard">
+        <div class="filename">backend/src/server.js</div>
+        <pre><code>console.log(`Server running on https://localhost:${PORT}`);</code></pre>
+      </div>
+      <p>Whatever <code>PORT</code> holds (here, <code>5000</code>) gets inserted right into the sentence, producing: <code>Server running on https://localhost:5000</code>. The alternative, without templates, is uglier string-gluing with <code>+</code>:</p>
+      <pre><code>console.log('Server running on https://localhost:' + PORT);</code></pre>
+    </section>
+
+    <section id="modules">
+      <div class="section-head"><span class="section-num">06</span><h2>Modules — how files share code</h2></div>
+      <p>Every file in <code>backend/src/</code> is its own sealed box. Nothing inside it is visible to any other file unless it's explicitly exported — and nothing from another file is usable unless it's explicitly imported. Two keywords do this: <code>require</code> and <code>module.exports</code>.</p>
+
+      <div class="filecard">
+        <div class="filename">backend/src/utils/token.js — the exporting side</div>
+        <pre><code>const generateToken = (user) => { /* ... */ };
+
+module.exports = { generateToken };</code></pre>
+      </div>
+      <div class="filecard">
+        <div class="filename">backend/src/controllers/auth.controller.js — the importing side</div>
+        <pre><code>const { generateToken } = require('../utils/token');</code></pre>
+      </div>
+      <p>Read the second line the same way you now read destructuring: "run <code>token.js</code>, take the object it exports, and pull out just <code>generateToken</code> from it." The <code>'../utils/token'</code> part is a relative file path — <code>../</code> means "go up one folder first."</p>
+
+      <div class="callout">
+        <strong>Two shapes of export, both used in this project:</strong>
+        <ul class="notes" style="margin-top:.5rem">
+          <li><code>module.exports = { register, login, getMe }</code> — exports <em>several</em> named things at once (an object of them). Import with <code>{ }</code> destructuring, like above.</li>
+          <li><code>module.exports = protect</code> — exports <em>one single thing</em> directly, no wrapper object. Import it plain: <code>const protect = require('../middleware/auth.middleware')</code>, no curly braces.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="async">
+      <div class="section-head"><span class="section-num">07</span><h2>async / await — waiting for slow things</h2></div>
+      <p>Checking a database, hashing a password, or calling an external API all take real time — milliseconds, but not instant. JavaScript doesn't want to freeze everything else while it waits, so slow operations return a <strong>Promise</strong>: an "I'll get back to you" placeholder for a value that isn't ready yet.</p>
+      <p><code>await</code> is how you say "pause this function right here until that promise resolves, then continue with the real value." You're only allowed to use <code>await</code> inside a function marked <code>async</code> — which is why almost every controller function in this project starts with exactly that word:</p>
+
+      <div class="filecard">
+        <div class="filename">backend/src/controllers/auth.controller.js</div>
+        <pre><code>const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user);
+    return res.status(200).json({ token });
+  } catch (err) {
+    next(err);
+  }
+};</code></pre>
+      </div>
+      <ul class="notes">
+        <li><strong><code>async (req, res, next) =&gt;</code></strong> — marks this whole function as one that's allowed to <code>await</code> things inside it.</li>
+        <li><strong><code>await User.findOne({ email })</code></strong> — "go ask MongoDB for a user with this email, and don't run the next line until the answer comes back."</li>
+        <li><strong><code>await bcrypt.compare(...)</code></strong> — same idea: hashing comparison takes a moment, so we wait for the real true/false result before checking it.</li>
+        <li><strong><code>generateToken(user)</code> has no <code>await</code></strong> — because signing a JWT is fast, synchronous math, not something that needs waiting for.</li>
+      </ul>
+      <div class="callout warm">
+        <strong>The mental model that actually matters:</strong> without <code>await</code>, <code>const user = User.findOne({ email })</code> would hand you the <em>unfinished promise itself</em>, not the user — and every line after it would be working with "a promise that a user is coming," not an actual user object. <code>await</code> is what unwraps the promise into the real value.
+      </div>
+    </section>
+
+    <section id="errors">
+      <div class="section-head"><span class="section-num">08</span><h2>try / catch — expecting things to go wrong</h2></div>
+      <p><code>try</code> runs a block of code optimistically. If <em>anything</em> inside it throws an error — a network failure, a bad database query, anything — execution immediately jumps into <code>catch</code>, skipping the rest of <code>try</code>, instead of crashing the whole server.</p>
+      <div class="filecard">
+        <div class="filename">Pattern repeated in every controller function</div>
+        <pre><code>try {
+  // the real logic — database calls, hashing, etc.
+} catch (err) {
+  next(err);
+}</code></pre>
+      </div>
+      <p><code>next(err)</code> is an Express-specific move: it hands the error off to the app's central error handler (in <code>server.js</code>) instead of dealing with it locally. That's what guarantees every possible failure — no matter which controller it came from — ends up producing the exact same safe, generic response:</p>
+      <div class="filecard">
+        <div class="filename">backend/src/server.js</div>
+        <pre><code>app.use((err, req, res, next) => {
+  console.error(err.stack); // stays on the server only
+  res.status(err.status || 500).json({ message: 'Something went wrong' });
+});</code></pre>
+      </div>
+      <p>A function with four parameters like this one is how Express specifically recognizes "this is the error handler" — it's always the last piece of middleware, and it's the only kind allowed to take <code>err</code> as its first argument.</p>
+    </section>
+
+    <section id="npm">
+      <div class="section-head"><span class="section-num">09</span><h2>npm packages &amp; JSON</h2></div>
+      <p>Every <code>require('something')</code> that isn't a relative path (doesn't start with <code>./</code> or <code>../</code>) is pulling in code someone else wrote, downloaded into <code>node_modules</code> by <code>npm install</code>:</p>
+      <pre><code>const bcrypt = require('bcrypt');       // password hashing
+const jwt = require('jsonwebtoken');    // JWT sign/verify
+const express = require('express');    // the web server framework itself
+const mongoose = require('mongoose');   // talks to MongoDB</code></pre>
+      <p><code>package.json</code> keeps the official list of which packages (and which versions) the project depends on, so anyone who clones the repo can run <code>npm install</code> and get the exact same set.</p>
+
+      <h3>JSON — the shape every API response takes</h3>
+      <p>JSON looks almost identical to a JavaScript object, because it's based on the same syntax — but it's actually just <em>text</em>, used to send data between the browser/Postman and the server. <code>res.json({...})</code> converts a real JavaScript object into that text form automatically:</p>
+      <pre><code>res.status(201).json({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+});</code></pre>
+      <p>This is exactly what you see appear in a Postman response body — the object above, serialized as JSON text.</p>
+    </section>
+
+    <section id="walkthrough">
+      <div class="section-head"><span class="section-num">10</span><h2>Putting it all together</h2></div>
+      <p>Every idea above, all at once, in the real function that runs when someone registers. Read it now and it should actually make sense line by line.</p>
+
+      <div class="filecard">
+        <div class="filename">backend/src/controllers/auth.controller.js</div>
+        <pre><code>const register = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: 'Registration failed' });
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    const user = await User.create({
+      name,
+      email,
+      passwordHash,
+      role: role || 'client',
+    });
+
+    return res.status(201).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (err) {
+    next(err);
+  }
+};</code></pre>
+      </div>
+
+      <ol class="steps">
+        <li><h4>Function &amp; async</h4><p><code>async (req, res, next) =&gt;</code> — an arrow function that's allowed to <code>await</code>. Express calls this automatically whenever a <code>POST /api/auth/register</code> request arrives.</p></li>
+        <li><h4>try, in case anything below fails</h4><p>Everything real happens inside <code>try</code>; any thrown error skips straight to <code>catch</code> at the bottom.</p></li>
+        <li><h4>Destructure the request body</h4><p><code>const { name, email, password, role } = req.body</code> pulls four named fields out of the incoming JSON object in one line.</p></li>
+        <li><h4>Await the database check</h4><p><code>await User.findOne({ email })</code> pauses here until MongoDB answers whether this email is already registered.</p></li>
+        <li><h4>Early return on failure</h4><p>If a match was found, respond immediately with a generic <code>400</code> and stop — nothing below this line runs.</p></li>
+        <li><h4>Hash the password (two awaits)</h4><p>Generating a salt and hashing the password are both slow, asynchronous operations — each gets its own <code>await</code>.</p></li>
+        <li><h4>Create the user</h4><p><code>User.create({...})</code> saves the new document to MongoDB — note <code>passwordHash</code> is stored, and the real <code>password</code> variable is never saved anywhere.</p></li>
+        <li><h4>Respond with JSON</h4><p>An object is built up and handed to <code>res.json()</code>, which turns it into the JSON text Postman displays — deliberately leaving <code>passwordHash</code> out of it.</p></li>
+        <li><h4>catch, just in case</h4><p>If <em>anything</em> above threw — a lost database connection, an unexpected error — <code>next(err)</code> routes it to the one central handler that always replies the same safe way.</p></li>
+      </ol>
+    </section>
+
+    <section id="cheatsheet">
+      <div class="section-head"><span class="section-num">11</span><h2>Cheat sheet</h2></div>
+      <dl class="glossary">
+        <div><dt>const x = ...</dt><dd>Create a variable that can't be reassigned.</dd></div>
+        <div><dt>(a, b) =&gt; { }</dt><dd>An arrow function taking inputs <code>a</code> and <code>b</code>.</dd></div>
+        <div><dt>{ a, b } = obj</dt><dd>Destructuring — pull fields <code>a</code> and <code>b</code> out of an object into their own variables.</dd></div>
+        <div><dt>`text ${x}`</dt><dd>Template string — inserts the variable <code>x</code> into the text.</dd></div>
+        <div><dt>require('x')</dt><dd>Import code from another file or an installed package.</dd></div>
+        <div><dt>module.exports</dt><dd>What a file makes available to other files that <code>require</code> it.</dd></div>
+        <div><dt>async / await</dt><dd>Wait for a slow operation (database, hashing, network) to finish before continuing.</dd></div>
+        <div><dt>try / catch</dt><dd>Run code optimistically; jump to <code>catch</code> if anything inside throws.</dd></div>
+        <div><dt>req / res</dt><dd>The incoming request and the outgoing response, in every Express route.</dd></div>
+        <div><dt>.json({...})</dt><dd>Send a JavaScript object back to the client as JSON text.</dd></div>
+      </dl>
+    </section>
+
+    <footer>
+      Written as a companion to <code>docs/field-guide.html</code> in the HustleHub+ repository — read this one first if any of the syntax there looked unfamiliar.
+    </footer>
+  </main>
+</div>

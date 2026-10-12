@@ -1,0 +1,539 @@
+<title>HustleHub+ Field Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Literata:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#eef4f8;
+    --paper-raised:#ffffff;
+    --ink:#16324f;
+    --ink-soft:#3c5875;
+    --line:#b9cedd;
+    --line-strong:#8fb0c6;
+    --accent:#1c7c8c;
+    --accent-ink:#ffffff;
+    --warm:#c97b3d;
+    --good:#2e7d46;
+    --danger:#b23a3a;
+    --code-bg:#e3edf3;
+    --shadow: 0 1px 2px rgba(22,50,79,.06), 0 6px 20px rgba(22,50,79,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0f2a44;
+      --paper-raised:#123253;
+      --ink:#dceaf3;
+      --ink-soft:#9fbdd2;
+      --line:#244a68;
+      --line-strong:#2f5c7e;
+      --accent:#5fd0da;
+      --accent-ink:#06232b;
+      --warm:#e3a868;
+      --good:#6fcb8b;
+      --danger:#e3726b;
+      --code-bg:#0b2136;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f2a44;
+    --paper-raised:#123253;
+    --ink:#dceaf3;
+    --ink-soft:#9fbdd2;
+    --line:#244a68;
+    --line-strong:#2f5c7e;
+    --accent:#5fd0da;
+    --accent-ink:#06232b;
+    --warm:#e3a868;
+    --good:#6fcb8b;
+    --danger:#e3726b;
+    --code-bg:#0b2136;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Literata', Georgia, 'Times New Roman', serif;
+    line-height:1.6;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 36px 36px;
+    background-attachment: local;
+    opacity: 0;
+    animation: settle .5s ease-out .05s forwards;
+  }
+  @keyframes settle{ to { opacity:1; } }
+  @media (prefers-reduced-motion: reduce){
+    body{ animation:none; opacity:1; }
+    html{ scroll-behavior:auto !important; }
+  }
+  html{ scroll-behavior:smooth; }
+
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0 0 .4em;
+  }
+  code, .mono, .pill, .kbd, .eyebrow, th, .req-where, .status-code{
+    font-family:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  }
+  a{ color:var(--accent); }
+  a:focus-visible, button:focus-visible, summary:focus-visible{
+    outline: 2px solid var(--accent); outline-offset:2px;
+  }
+
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 4vw, 3rem) 6rem;
+    display:grid;
+    grid-template-columns: 220px minmax(0,1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+  }
+  @media (max-width: 880px){
+    .wrap{ grid-template-columns: 1fr; }
+  }
+
+  /* ---- index rail ---- */
+  .rail{
+    position: sticky;
+    top: 1.5rem;
+    align-self:start;
+    padding-top: 3.2rem;
+  }
+  @media (max-width: 880px){
+    .rail{ position:static; padding-top:0; }
+  }
+  .rail nav{
+    display:flex; flex-direction:column; gap: .1rem;
+    border-left: 2px solid var(--line);
+    padding-left: 1rem;
+  }
+  @media (max-width: 880px){
+    .rail nav{
+      flex-direction:row; overflow-x:auto; border-left:none; border-top:2px solid var(--line);
+      padding-left:0; padding-top:.75rem; gap:1rem; margin-bottom: 1rem;
+    }
+  }
+  .rail a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+    text-decoration:none;
+    padding: .35rem 0;
+    white-space:nowrap;
+    border-bottom: 1px solid transparent;
+  }
+  .rail a:hover{ color:var(--accent); }
+
+  /* ---- header ---- */
+  header.hero{
+    padding: 3.5rem 0 1rem;
+    max-width: 62ch;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.72rem; letter-spacing:.09em; text-transform:uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .eyebrow::before{
+    content:""; width:.5rem; height:.5rem; border-radius:50%;
+    background:var(--accent); display:inline-block;
+  }
+  header.hero h1{ font-size: clamp(2rem, 4vw, 2.9rem); }
+  header.hero p.lede{
+    font-size: 1.15rem; color: var(--ink-soft); max-width:56ch;
+  }
+
+  main{ min-width:0; }
+  section{
+    padding: 2.75rem 0;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 1.5rem;
+  }
+  section:first-of-type{ border-top:none; }
+  .section-head{
+    display:flex; align-items:baseline; gap: .9rem; margin-bottom: 1.3rem;
+  }
+  .section-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.85rem; color: var(--accent);
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    padding: .05rem .4rem;
+  }
+  section > p, section > ul{ max-width: 66ch; }
+  section h3{ font-size:1.2rem; margin-top: 1.6rem; }
+
+  /* ---- cards ---- */
+  .card-grid{
+    display:grid; gap:1rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+    margin-top: 1.4rem;
+  }
+  .card{
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow);
+  }
+  .card h4{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.02rem;
+    margin: 0 0 .4rem; color:var(--ink);
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .card h4 .num{ color:var(--accent); font-family:'JetBrains Mono',monospace; font-size:.85rem; }
+  .card p{ margin:0; font-size:.96rem; color:var(--ink-soft); }
+
+  /* ---- code blocks ---- */
+  pre{
+    background: var(--code-bg);
+    border:1px solid var(--line);
+    border-radius: 8px;
+    padding: .9rem 1.05rem;
+    overflow-x:auto;
+    font-size:.85rem;
+    line-height:1.55;
+    margin: .9rem 0;
+  }
+  pre code{ background:none; padding:0; }
+  p code, li code{
+    background: var(--code-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding: .05rem .35rem;
+    font-size:.85em;
+  }
+
+  /* ---- pills / status ---- */
+  .pill{
+    display:inline-flex; align-items:center; gap:.35rem;
+    font-size:.72rem; letter-spacing:.03em;
+    padding:.2rem .55rem; border-radius:999px;
+    border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .pill--done{ background:color-mix(in srgb, var(--good) 16%, transparent); color:var(--good); border-color:color-mix(in srgb, var(--good) 40%, transparent); }
+  .pill--todo{ background:color-mix(in srgb, var(--warm) 18%, transparent); color:var(--warm); border-color:color-mix(in srgb, var(--warm) 45%, transparent); }
+  .pill--fail{ background:color-mix(in srgb, var(--danger) 16%, transparent); color:var(--danger); border-color:color-mix(in srgb, var(--danger) 40%, transparent); }
+  .pill--pass{ background:color-mix(in srgb, var(--good) 16%, transparent); color:var(--good); border-color:color-mix(in srgb, var(--good) 40%, transparent); }
+
+  /* ---- tables ---- */
+  table{ width:100%; border-collapse:collapse; margin-top:1rem; font-size:.92rem; }
+  caption{ text-align:left; color:var(--ink-soft); font-size:.85rem; margin-bottom:.5rem; }
+  th, td{
+    text-align:left; padding:.55rem .7rem;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  th{
+    font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:500;
+  }
+  td.num, th.num{ font-variant-numeric:tabular-nums; }
+  .table-wrap{ overflow-x:auto; }
+
+  /* ---- diagram ---- */
+  .diagram-frame{
+    background: var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    margin-top:1.2rem;
+  }
+  .diagram-frame svg{ width:100%; height:auto; display:block; }
+  .diagram-caption{ font-size:.82rem; color:var(--ink-soft); margin-top:.6rem; }
+
+  /* ---- glossary ---- */
+  dl.glossary{ display:grid; gap: .9rem; margin-top:1rem; }
+  dl.glossary div{
+    display:grid; grid-template-columns: 150px 1fr; gap:.9rem;
+    padding-bottom:.9rem; border-bottom:1px dashed var(--line);
+  }
+  @media (max-width:600px){ dl.glossary div{ grid-template-columns:1fr; } }
+  dl.glossary dt{ font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--ink); font-size:.88rem; }
+  dl.glossary dd{ margin:0; color:var(--ink-soft); }
+
+  .callout{
+    border-left:3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--paper-raised));
+    border-radius: 0 8px 8px 0;
+    padding: .9rem 1.1rem;
+    margin: 1.2rem 0;
+    font-size:.95rem;
+  }
+  .callout strong{ color:var(--ink); }
+
+  ol.steps{ list-style:none; margin:1.2rem 0 0; padding:0; counter-reset: step; }
+  ol.steps > li{
+    counter-increment: step;
+    position:relative;
+    padding: .1rem 0 1.1rem 2.4rem;
+    border-left: 2px solid var(--line);
+    margin-left: .55rem;
+  }
+  ol.steps > li:last-child{ border-left-color:transparent; }
+  ol.steps > li::before{
+    content: counter(step);
+    position:absolute; left:-.75rem; top:-.1rem;
+    width:1.5rem; height:1.5rem;
+    background: var(--accent); color: var(--accent-ink);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600;
+  }
+  ol.steps h4{ margin:0 0 .25rem; font-family:'Fraunces',serif; font-size:1rem; }
+  ol.steps p{ margin:0; color:var(--ink-soft); font-size:.94rem; }
+
+  footer{
+    max-width:66ch; margin-top:1rem; padding-top:1.5rem;
+    border-top:1px solid var(--line);
+    font-size:.85rem; color:var(--ink-soft);
+  }
+</style>
+
+<div class="wrap">
+  <aside class="rail">
+    <nav aria-label="Sections">
+      <a href="#start">Start here</a>
+      <a href="#big-idea">The big idea</a>
+      <a href="#five-ideas">5 security ideas</a>
+      <a href="#map">How it fits together</a>
+      <a href="#run-it">Run it</a>
+      <a href="#test-it">Test it</a>
+      <a href="#checklist">Requirement checklist</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero" id="start">
+      <div class="eyebrow">Field guide · Part 1</div>
+      <h1>HustleHub+, explained from the ground up</h1>
+      <p class="lede">A walkthrough of the secure login system your sibling built — what it does, why every security decision was made, how to run it on your own machine, and how to prove (with Postman) that it actually works.</p>
+    </header>
+
+    <section id="big-idea">
+      <div class="section-head"><span class="section-num">01</span><h2>The big idea</h2></div>
+      <p><strong>HustleHub+</strong> is a freelance marketplace — think "clients hire freelancers," like a mini Upwork. Freelancers list gigs, clients book them, and the platform tracks the money and estimates tax owed on it.</p>
+      <p>That's the full vision. <strong>Part 1</strong> — the part in this repo — only builds one corner of it: <em>a secure front door</em>. Before anyone can post a gig or book one, they need an account, and that account needs to be hard to steal. So Part 1 is entirely about registration, login, and locking everything behind that login correctly.</p>
+      <div class="callout">
+        <strong>Why start here instead of gigs and bookings?</strong> Because every later feature — "only freelancers can post gigs," "only you can see your own income" — depends on the system reliably knowing <em>who is making each request</em>. Get that wrong and nothing built on top of it can be trusted.
+      </div>
+    </section>
+
+    <section id="five-ideas">
+      <div class="section-head"><span class="section-num">02</span><h2>Five ideas that make it secure</h2></div>
+      <p>Every requirement in the Part 1 brief boils down to one of these five ideas. Once you understand these, you understand the whole assignment.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h4><span class="num">01</span>Never store the real password</h4>
+          <p>The database only ever holds a <strong>hash</strong> — scrambled text made from the password using <code>bcrypt</code>, that can't be reversed back into the original. Even if someone stole the whole database, they'd get scrambled goo, not passwords.</p>
+          <pre><code>const salt = await bcrypt.genSalt(12);
+const passwordHash = await bcrypt.hash(password, salt);</code></pre>
+        </div>
+        <div class="card">
+          <h4><span class="num">02</span>Prove who you are with a token</h4>
+          <p>On login, the server hands back a <strong>JWT</strong> — a signed, tamper-proof note that says "this is user X." The browser sends it back on every later request instead of the password, in an <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
+          <pre><code>jwt.sign(
+  { id: user._id, role: user.role },
+  JWT_SECRET,
+  { expiresIn: "1h" }
+)</code></pre>
+        </div>
+        <div class="card">
+          <h4><span class="num">03</span>Never trust incoming data</h4>
+          <p>Every registration/login body is checked <em>before</em> it touches any logic: is the email actually shaped like an email? Is the password long enough? Text fields are also stripped of characters that could be used to inject scripts.</p>
+          <pre><code>body('email').isEmail()
+body('password').isLength({ min: 8 })
+body('name').trim().escape()</code></pre>
+        </div>
+        <div class="card">
+          <h4><span class="num">04</span>Encrypt the whole trip</h4>
+          <p>The API only speaks <strong>HTTPS</strong>, using a locally-generated SSL certificate. That means the password and token are scrambled in transit — a network eavesdropper sees noise, not credentials.</p>
+        </div>
+        <div class="card">
+          <h4><span class="num">05</span>Fail without oversharing</h4>
+          <p>Whatever goes wrong internally, the person on the other end always gets the same shape of generic message — never a stack trace, a file path, or "that email doesn't exist" (which would let an attacker fish for real accounts).</p>
+          <pre><code>res.status(401).json({ message: "Invalid credentials" })
+// same message whether the email
+// or the password was wrong</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="map">
+      <div class="section-head"><span class="section-num">03</span><h2>How the pieces fit together</h2></div>
+      <p>A request only ever travels in one direction through the server — in the front, through every guard in order, out the back. Nothing skips the line.</p>
+
+      <div class="diagram-frame">
+        <svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: browser sends an HTTPS request through Helmet, CORS, validation and a JWT guard inside the Express server, which talks to MongoDB Atlas.">
+          <defs>
+            <marker id="fg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink-soft)"></path>
+            </marker>
+          </defs>
+
+          <rect x="16" y="110" width="120" height="60" rx="8" style="fill:var(--paper-raised);stroke:var(--line-strong);stroke-width:1.5"></rect>
+          <text x="76" y="135" text-anchor="middle" style="fill:var(--ink);font-family:'Fraunces',serif;font-size:15px;font-weight:600">Browser</text>
+          <text x="76" y="153" text-anchor="middle" style="fill:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-size:10px">(or Postman)</text>
+
+          <line x1="136" y1="140" x2="192" y2="140" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+          <text x="164" y="128" text-anchor="middle" style="fill:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px">HTTPS</text>
+
+          <rect x="192" y="30" width="440" height="240" rx="10" style="fill:none;stroke:var(--line-strong);stroke-width:1.5;stroke-dasharray:4 4"></rect>
+          <text x="412" y="20" text-anchor="middle" style="fill:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em">EXPRESS SERVER (server.js)</text>
+
+          <g>
+            <rect x="212" y="48" width="400" height="38" rx="6" style="fill:var(--code-bg);stroke:var(--line)"></rect>
+            <text x="412" y="72" text-anchor="middle" style="fill:var(--ink);font-size:13px">Helmet + CORS  ·  security headers &amp; origin check</text>
+
+            <line x1="412" y1="86" x2="412" y2="98" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+
+            <rect x="212" y="98" width="400" height="38" rx="6" style="fill:var(--code-bg);stroke:var(--line)"></rect>
+            <text x="412" y="122" text-anchor="middle" style="fill:var(--ink);font-size:13px">express-validator  ·  reject bad input (400)</text>
+
+            <line x1="412" y1="136" x2="412" y2="148" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+
+            <rect x="212" y="148" width="400" height="38" rx="6" style="fill:var(--code-bg);stroke:var(--line)"></rect>
+            <text x="412" y="172" text-anchor="middle" style="fill:var(--ink);font-size:13px">JWT guard  ·  only on routes past login (401 if bad)</text>
+
+            <line x1="412" y1="186" x2="412" y2="198" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+
+            <rect x="212" y="198" width="400" height="38" rx="6" style="fill:var(--code-bg);stroke:var(--line)"></rect>
+            <text x="412" y="222" text-anchor="middle" style="fill:var(--ink);font-size:13px">Controller + bcrypt  ·  register / login / getMe</text>
+
+            <line x1="412" y1="236" x2="412" y2="248" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+
+            <rect x="212" y="248" width="400" height="38" rx="6" style="fill:var(--code-bg);stroke:var(--line)"></rect>
+            <text x="412" y="272" text-anchor="middle" style="fill:var(--ink);font-size:13px">Error handler  ·  generic message only, always</text>
+          </g>
+
+          <line x1="632" y1="140" x2="688" y2="140" style="stroke:var(--ink-soft);stroke-width:1.5" marker-end="url(#fg-arrow)"></line>
+          <text x="660" y="128" text-anchor="middle" style="fill:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px">Mongoose</text>
+
+          <rect x="688" y="110" width="116" height="60" rx="8" style="fill:var(--paper-raised);stroke:var(--line-strong);stroke-width:1.5"></rect>
+          <text x="746" y="135" text-anchor="middle" style="fill:var(--ink);font-family:'Fraunces',serif;font-size:14px;font-weight:600">MongoDB</text>
+          <text x="746" y="153" text-anchor="middle" style="fill:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-size:10px">Atlas · Users</text>
+        </svg>
+        <p class="diagram-caption">Simplified from the full architecture diagram in <code>docs/architecture.md</code> — that version also marks the trust boundaries formally.</p>
+      </div>
+    </section>
+
+    <section id="run-it">
+      <div class="section-head"><span class="section-num">04</span><h2>Run it yourself</h2></div>
+      <p>Everything below happens inside the <code>backend/</code> folder, in a terminal.</p>
+      <ol class="steps">
+        <li>
+          <h4>Install dependencies</h4>
+          <p><code>npm install</code> — pulls in Express, Mongoose, bcrypt, and everything else listed in <code>package.json</code>.</p>
+        </li>
+        <li>
+          <h4>Set up <code>.env</code></h4>
+          <p>Copy <code>.env.example</code> to <code>.env</code> and fill in a real <code>MONGO_URI</code> (your Atlas connection string) and a random <code>JWT_SECRET</code>. If your database password has an <code>@</code> in it, encode it as <code>%40</code> — the URL format breaks otherwise.</p>
+        </li>
+        <li>
+          <h4>Generate a local HTTPS certificate</h4>
+          <p>Inside <code>backend/certs</code>: <code>openssl req -x509 -nodes -newkey rsa:2048 -keyout localhost-key.pem -out localhost.pem -days 365 -subj "/CN=localhost"</code></p>
+        </li>
+        <li>
+          <h4>Start the server</h4>
+          <p><code>npm run dev</code> — you should see <code>MongoDB connected</code> then <code>Server running on https://localhost:5000</code>.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="test-it">
+      <div class="section-head"><span class="section-num">05</span><h2>Test it in Postman</h2></div>
+      <p>The brief asks for proof, not just working code — that's what this section produces.</p>
+      <ol class="steps">
+        <li>
+          <h4>Turn off SSL verification</h4>
+          <p>Postman → <strong>Settings → General</strong> → toggle off <em>SSL certificate verification</em>. Needed because the local cert is self-signed, not from a public authority.</p>
+        </li>
+        <li>
+          <h4>Import the collection</h4>
+          <p>Drag <code>postman/HustleHub.postman_collection.json</code> onto the Postman window. It appears as <strong>HustleHub+ Auth API</strong> with three folders.</p>
+        </li>
+        <li>
+          <h4>Run the whole collection</h4>
+          <p>Click the collection → <strong>Run</strong> → run Register, then Login, then Protected route, in that order (Login has to run first — it's what generates the token the later requests reuse).</p>
+        </li>
+      </ol>
+
+      <h3>What a full green run proves</h3>
+      <div class="table-wrap">
+      <table>
+        <caption>Each row is one Postman request in the collection</caption>
+        <thead><tr><th>Request</th><th class="num">Status</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Register — valid</td><td class="num status-code">201</td><td><span class="pill pill--pass">pass</span> new account created</td></tr>
+          <tr><td>Register — duplicate email</td><td class="num status-code">400</td><td><span class="pill pill--pass">pass</span> rejected, no account leak</td></tr>
+          <tr><td>Register — bad email format</td><td class="num status-code">400</td><td><span class="pill pill--pass">pass</span> validation caught it</td></tr>
+          <tr><td>Register — short password</td><td class="num status-code">400</td><td><span class="pill pill--pass">pass</span> validation caught it</td></tr>
+          <tr><td>Login — correct credentials</td><td class="num status-code">200</td><td><span class="pill pill--pass">pass</span> token issued</td></tr>
+          <tr><td>Login — wrong password</td><td class="num status-code">401</td><td><span class="pill pill--pass">pass</span> generic error</td></tr>
+          <tr><td>Login — unknown email</td><td class="num status-code">401</td><td><span class="pill pill--pass">pass</span> same generic error</td></tr>
+          <tr><td>/me — no token</td><td class="num status-code">401</td><td><span class="pill pill--pass">pass</span> route is protected</td></tr>
+          <tr><td>/me — garbage token</td><td class="num status-code">401</td><td><span class="pill pill--pass">pass</span> signature checked</td></tr>
+          <tr><td>/me — valid token</td><td class="num status-code">200</td><td><span class="pill pill--pass">pass</span> real user data, no password field</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout"><strong>Heads up:</strong> re-running the collection a second time re-uses the same test email, so "Register — valid" will flip to a 400 (it's now a duplicate). Change the collection's <code>testEmail</code> variable before a fresh run if you want every row green at once.</div>
+    </section>
+
+    <section id="checklist">
+      <div class="section-head"><span class="section-num">06</span><h2>Part 1 requirement checklist</h2></div>
+      <p>Line items straight from the assignment brief, matched against what actually exists in the repo right now.</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Requirement</th><th>Where it lives</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Architecture diagram (MERN, with boundaries)</td><td class="req-where">docs/architecture.md</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Backend API in Node.js + Express</td><td class="req-where">backend/src/server.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Registration &amp; login endpoints</td><td class="req-where">routes/auth.routes.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Passwords hashed, never stored raw</td><td class="req-where">controllers/auth.controller.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>JWT issued on login, validated on protected routes</td><td class="req-where">middleware/auth.middleware.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Served over HTTPS with a local SSL cert</td><td class="req-where">backend/certs/, server.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>All input validated before processing</td><td class="req-where">middleware/validate.middleware.js</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Errors never leak internals</td><td class="req-where">server.js error handler</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>README explains system, users, structure, security</td><td class="req-where">README.md</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Postman collection: success + invalid cases</td><td class="req-where">postman/HustleHub.postman_collection.json</td><td><span class="pill pill--done">done</span></td></tr>
+          <tr><td>Screenshots of API responses</td><td class="req-where">not yet captured</td><td><span class="pill pill--todo">todo</span></td></tr>
+          <tr><td>Demo video (run, register, login + token)</td><td class="req-where">not yet recorded</td><td><span class="pill pill--todo">todo</span></td></tr>
+          <tr><td>Push everything to GitHub</td><td class="req-where">confirm latest commit is pushed</td><td><span class="pill pill--todo">todo</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <div class="section-head"><span class="section-num">07</span><h2>Glossary</h2></div>
+      <dl class="glossary">
+        <div><dt>endpoint</dt><dd>One specific URL + method the API responds to, e.g. <code>POST /api/auth/login</code>.</dd></div>
+        <div><dt>middleware</dt><dd>A function that runs <em>before</em> the real route logic — used here for security headers, validation, and the JWT check.</dd></div>
+        <div><dt>hash</dt><dd>A one-way scramble of data. You can turn a password into a hash, but never turn the hash back into the password.</dd></div>
+        <div><dt>JWT</dt><dd>"JSON Web Token" — a signed, self-contained proof of identity the server hands out at login and checks on every later request.</dd></div>
+        <div><dt>HTTPS / TLS</dt><dd>HTTP wrapped in encryption, so data in transit can't be read or tampered with by anything sitting on the network in between.</dd></div>
+        <div><dt>environment variable</dt><dd>A setting (like a database password) kept outside the code, in <code>.env</code>, so secrets never get committed to git.</dd></div>
+        <div><dt>status code</dt><dd>The 3-digit number every HTTP response carries — <code>200</code> ok, <code>201</code> created, <code>400</code> bad input, <code>401</code> not authenticated.</dd></div>
+      </dl>
+    </section>
+
+    <footer>
+      Written as a companion to <code>README.md</code> and <code>docs/architecture.md</code> in the HustleHub+ repository — Part 1, Secure Foundations.
+    </footer>
+  </main>
+</div>

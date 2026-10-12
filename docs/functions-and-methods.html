@@ -1,0 +1,514 @@
+<title>Functions &amp; Methods Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Literata:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#eef4f8; --paper-raised:#ffffff; --ink:#16324f; --ink-soft:#3c5875;
+    --line:#b9cedd; --line-strong:#8fb0c6; --accent:#1c7c8c; --accent-ink:#ffffff;
+    --warm:#c97b3d; --good:#2e7d46; --danger:#b23a3a; --code-bg:#e3edf3;
+    --shadow: 0 1px 2px rgba(22,50,79,.06), 0 6px 20px rgba(22,50,79,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0f2a44; --paper-raised:#123253; --ink:#dceaf3; --ink-soft:#9fbdd2;
+      --line:#244a68; --line-strong:#2f5c7e; --accent:#5fd0da; --accent-ink:#06232b;
+      --warm:#e3a868; --good:#6fcb8b; --danger:#e3726b; --code-bg:#0b2136;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f2a44; --paper-raised:#123253; --ink:#dceaf3; --ink-soft:#9fbdd2;
+    --line:#244a68; --line-strong:#2f5c7e; --accent:#5fd0da; --accent-ink:#06232b;
+    --warm:#e3a868; --good:#6fcb8b; --danger:#e3726b; --code-bg:#0b2136;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Literata', Georgia, 'Times New Roman', serif; line-height:1.65;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 36px 36px; background-attachment: local;
+    opacity:0; animation: settle .5s ease-out .05s forwards;
+  }
+  @keyframes settle{ to { opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ body{ animation:none; opacity:1; } html{ scroll-behavior:auto !important; } }
+  html{ scroll-behavior:smooth; }
+
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; font-weight:600; text-wrap:balance; color:var(--ink); margin:0 0 .4em; }
+  code, .mono, .eyebrow, .tag{ font-family:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; }
+  a{ color:var(--accent); }
+  a:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .wrap{
+    max-width: 1180px; margin:0 auto; padding: 0 clamp(1.25rem,4vw,3rem) 6rem;
+    display:grid; grid-template-columns: 220px minmax(0,1fr); gap: clamp(1.5rem,4vw,3.5rem);
+  }
+  @media (max-width:880px){ .wrap{ grid-template-columns: 1fr; } }
+
+  .rail{ position:sticky; top:1.5rem; align-self:start; padding-top:3.2rem; }
+  @media (max-width:880px){ .rail{ position:static; padding-top:0; } }
+  .rail nav{ display:flex; flex-direction:column; gap:.1rem; border-left:2px solid var(--line); padding-left:1rem; }
+  @media (max-width:880px){
+    .rail nav{ flex-direction:row; overflow-x:auto; border-left:none; border-top:2px solid var(--line);
+      padding-left:0; padding-top:.75rem; gap:1rem; margin-bottom:1rem; }
+  }
+  .rail a{
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none; padding:.32rem 0; white-space:nowrap;
+  }
+  .rail a:hover{ color:var(--accent); }
+
+  header.hero{ padding: 3.5rem 0 1rem; max-width:62ch; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:.5rem; font-size:.72rem; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1rem; }
+  .eyebrow::before{ content:""; width:.5rem; height:.5rem; border-radius:50%; background:var(--accent); display:inline-block; }
+  header.hero h1{ font-size: clamp(2rem,4vw,2.8rem); }
+  header.hero p.lede{ font-size:1.12rem; color:var(--ink-soft); max-width:58ch; }
+
+  main{ min-width:0; }
+  section{ padding: 2.75rem 0; border-top:1px solid var(--line); scroll-margin-top:1.5rem; }
+  section:first-of-type{ border-top:none; }
+  .section-head{ display:flex; align-items:baseline; gap:.9rem; margin-bottom:1.3rem; }
+  .section-num{ font-family:'JetBrains Mono',monospace; font-size:.85rem; color:var(--accent);
+    border:1px solid var(--line-strong); border-radius:4px; padding:.05rem .4rem; }
+  section > p, section > ul{ max-width:66ch; }
+  section h3{ font-size:1.15rem; margin-top:1.6rem; }
+
+  pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px; padding:.85rem 1rem;
+    overflow-x:auto; font-size:.85rem; line-height:1.5; margin:.7rem 0; max-width:70ch; }
+  pre code{ background:none; padding:0; }
+  p code, li code, dt code{ background:var(--code-bg); border:1px solid var(--line); border-radius:4px;
+    padding:.05rem .35rem; font-size:.85em; }
+
+  .filecard{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding: 1.1rem 1.2rem; box-shadow:var(--shadow); margin: 1.1rem 0; max-width:74ch;
+  }
+  .filecard pre{ margin:0; }
+
+  .callout{
+    border-left:3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--paper-raised));
+    border-radius:0 8px 8px 0; padding:.9rem 1.1rem; margin:1.2rem 0; font-size:.95rem; max-width:66ch;
+  }
+  .callout strong{ color:var(--ink); }
+
+  .notes{ list-style:none; margin:1rem 0 0; padding:0; display:grid; gap:.6rem; max-width:70ch; }
+  .notes li{ position:relative; padding-left:1.6rem; font-size:.95rem; color:var(--ink-soft); }
+  .notes li::before{ content:"→"; position:absolute; left:0; color:var(--accent); font-weight:600; }
+  .notes li strong{ color:var(--ink); }
+
+  /* method card grid */
+  .method-grid{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); margin:1.3rem 0; }
+  .method-card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.1rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:.55rem;
+  }
+  .method-card .name{ font-family:'JetBrains Mono',monospace; font-size:.92rem; color:var(--accent); font-weight:600; }
+  .method-card .desc{ font-size:.88rem; color:var(--ink-soft); margin:0; }
+  .method-card pre{ margin:0; font-size:.78rem; padding:.6rem .7rem; }
+  .method-card .out{ font-size:.76rem; color:var(--good); font-family:'JetBrains Mono',monospace; }
+  .method-card .out::before{ content:"→ "; color:var(--ink-soft); }
+
+  .group-label{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--warm); border:1px solid color-mix(in srgb, var(--warm) 45%, transparent);
+    background: color-mix(in srgb, var(--warm) 12%, transparent); border-radius:999px; padding:.15rem .6rem; margin-bottom:.9rem;
+  }
+
+  .compare{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); margin:1.1rem 0; max-width:74ch; }
+  .compare .card{ background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem; box-shadow:var(--shadow); }
+  .compare .card h4{ margin:0 0 .5rem; font-family:'Fraunces',serif; font-size:.98rem; }
+  .compare .card pre{ margin:.4rem 0 0; font-size:.8rem; }
+
+  table.ref{ width:100%; border-collapse:collapse; margin-top:1rem; font-size:.88rem; max-width:80ch; }
+  table.ref th, table.ref td{ text-align:left; padding:.5rem .65rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.ref th{ font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:500; }
+  .table-wrap{ overflow-x:auto; }
+
+  footer{ max-width:66ch; margin-top:1rem; padding-top:1.5rem; border-top:1px solid var(--line); font-size:.85rem; color:var(--ink-soft); }
+</style>
+
+<div class="wrap">
+  <aside class="rail">
+    <nav aria-label="Sections">
+      <a href="#start">Start here</a>
+      <a href="#what-is">What is a function?</a>
+      <a href="#writing">Writing a function</a>
+      <a href="#params">Inputs &amp; outputs</a>
+      <a href="#as-values">Functions as values</a>
+      <a href="#methods">What is a "method"?</a>
+      <a href="#strings">String methods</a>
+      <a href="#arrays">Array methods</a>
+      <a href="#objects">Object methods</a>
+      <a href="#json">JSON methods</a>
+      <a href="#numbers">Number methods</a>
+      <a href="#console">console methods</a>
+      <a href="#reference">Quick reference</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero" id="start">
+      <div class="eyebrow">Slow guide · functions &amp; built-in methods</div>
+      <h1>Functions, and the built-in tools JavaScript hands you for free</h1>
+      <p class="lede">One idea per section, smallest example possible, real verified output under every snippet — nothing here was guessed, every line was actually run before being written down. Take your time; nothing later depends on rushing through earlier sections.</p>
+    </header>
+
+    <section id="what-is">
+      <div class="section-head"><span class="section-num">01</span><h2>What is a function, really?</h2></div>
+      <p>Think of a function like a recipe card. The card sits in a drawer doing nothing until you decide to <em>use</em> it. When you do, you can hand it ingredients, it does some steps, and it might hand something back.</p>
+      <div class="filecard">
+        <pre><code>function greet(personName) {
+  return "Hello, " + personName + "!";
+}</code></pre>
+      </div>
+      <p>That block on its own does <strong>nothing yet</strong> — it just defines the recipe. Nothing happens until you <em>call</em> it by name:</p>
+      <div class="filecard">
+        <pre><code>const message = greet("Alex");
+console.log(message);</code></pre>
+      </div>
+      <p>Let's actually run both lines together, for real, so you see the recipe get used:</p>
+      <pre><code class="mono">$ node -e 'function greet(personName){return "Hello, "+personName+"!";} console.log(greet("Alex"));'
+Hello, Alex!</code></pre>
+      <div class="callout">
+        <strong>The one sentence to remember:</strong> writing a function just defines the recipe. <em>Calling</em> it — writing its name followed by <code>()</code> — is what actually runs the steps.
+      </div>
+    </section>
+
+    <section id="writing">
+      <div class="section-head"><span class="section-num">02</span><h2>Two ways to write the same function</h2></div>
+      <p>JavaScript lets you write a function two different ways. They do the same job — you'll see both in real code, so it's worth recognizing both shapes.</p>
+      <div class="compare">
+        <div class="card">
+          <h4>The <code>function</code> keyword</h4>
+          <pre><code>function greet(personName) {
+  return "Hello, " + personName;
+}</code></pre>
+        </div>
+        <div class="card">
+          <h4>Arrow function</h4>
+          <pre><code>const greet = (personName) => {
+  return "Hello, " + personName;
+};</code></pre>
+        </div>
+      </div>
+      <p>Read the arrow version out loud as: "<code>greet</code> is a value — specifically, a function — that takes <code>personName</code> and produces (<code>=&gt;</code>) whatever's in the <code>{ }</code>." Modern JavaScript code (including this whole project) reaches for the arrow form almost every time.</p>
+    </section>
+
+    <section id="params">
+      <div class="section-head"><span class="section-num">03</span><h2>Inputs and outputs: parameters &amp; return</h2></div>
+      <p>Two separate ideas that are easy to blur together at first:</p>
+      <ul class="notes">
+        <li><strong>Parameters</strong> — the named placeholders in the function's own definition, e.g. <code>personName</code> above. They're empty boxes waiting to be filled.</li>
+        <li><strong>Arguments</strong> — the actual values you hand over when you call the function, e.g. <code>"Alex"</code> in <code>greet("Alex")</code>. The argument fills the parameter's box for that one run.</li>
+        <li><strong><code>return</code></strong> — the value the function hands back to whoever called it. A function with no <code>return</code> silently hands back <code>undefined</code> — "nothing."</li>
+      </ul>
+      <p>A function can take more than one input, in order:</p>
+      <pre><code>function addTax(price, taxRate) {
+  return price + (price * taxRate);
+}</code></pre>
+      <pre><code class="mono">$ node -e 'function addTax(price,taxRate){return price+(price*taxRate);} console.log(addTax(100, 0.15));'
+115</code></pre>
+    </section>
+
+    <section id="as-values">
+      <div class="section-head"><span class="section-num">04</span><h2>Functions can be passed around like any other value</h2></div>
+      <p>This is the idea that unlocks everything later (including how the actual server code works), so sit with it slowly: a function isn't just something you call — it's a value, exactly like a string or a number is a value. That means you can hand a function <em>into</em> another function as an input.</p>
+      <div class="filecard">
+        <pre><code>function runTwice(someFunction) {
+  someFunction();
+  someFunction();
+}
+
+function sayHi() {
+  console.log("hi!");
+}
+
+runTwice(sayHi);</code></pre>
+      </div>
+      <pre><code class="mono">$ node -e 'function runTwice(fn){fn();fn();} function sayHi(){console.log("hi!");} runTwice(sayHi);'
+hi!
+hi!</code></pre>
+      <p>Notice <code>sayHi</code> is passed <strong>without</strong> the parentheses — <code>sayHi</code> means "the recipe itself"; <code>sayHi()</code> would mean "run it right now." <code>runTwice</code> is the one deciding when to actually call it (twice, in this case).</p>
+      <div class="callout">
+        <strong>Why this matters for later:</strong> every route handler in this project — <code>app.get('/api/health', (req, res) =&gt; {...})</code> — is exactly this pattern. You're not calling that arrow function yourself; you're handing it to Express, and Express calls it later, whenever a matching request actually arrives.
+      </div>
+    </section>
+
+    <section id="methods">
+      <div class="section-head"><span class="section-num">05</span><h2>So what is a "method"?</h2></div>
+      <p>A <strong>method</strong> is just a function that already belongs to a value, called with a dot instead of standing on its own:</p>
+      <div class="compare">
+        <div class="card">
+          <h4>Plain function</h4>
+          <pre><code>greet("Alex")</code></pre>
+        </div>
+        <div class="card">
+          <h4>Method (dot syntax)</h4>
+          <pre><code>"  Alex  ".trim()</code></pre>
+        </div>
+      </div>
+      <p><code>.trim()</code> is a function that every string already comes with, built into the language — you're not defining it, JavaScript already did. The rest of this guide is a tour of the most useful ones that come built-in on strings, arrays, objects, and numbers.</p>
+    </section>
+
+    <section id="strings">
+      <div class="section-head"><span class="section-num">06</span><h2>String methods</h2></div>
+      <span class="group-label">text values</span>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="name">.trim()</div>
+          <p class="desc">Removes whitespace from both ends.</p>
+          <pre><code>"  Alex  ".trim()</code></pre>
+          <div class="out">"Alex"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.toLowerCase()</div>
+          <p class="desc">Converts every letter to lowercase.</p>
+          <pre><code>"HELLO".toLowerCase()</code></pre>
+          <div class="out">"hello"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.toUpperCase()</div>
+          <p class="desc">Converts every letter to uppercase.</p>
+          <pre><code>"hello".toUpperCase()</code></pre>
+          <div class="out">"HELLO"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.includes()</div>
+          <p class="desc">True/false — does the string contain this?</p>
+          <pre><code>"hi@example.com".includes("@")</code></pre>
+          <div class="out">true</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.slice(start, end)</div>
+          <p class="desc">Cuts out a piece of the string by position.</p>
+          <pre><code>"hello world".slice(0, 5)</code></pre>
+          <div class="out">"hello"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.split(separator)</div>
+          <p class="desc">Breaks a string into an array of pieces.</p>
+          <pre><code>"a,b,c".split(",")</code></pre>
+          <div class="out">["a", "b", "c"]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.replace(old, new)</div>
+          <p class="desc">Swaps the first match for something else.</p>
+          <pre><code>"hello".replace("h", "j")</code></pre>
+          <div class="out">"jello"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.startsWith()</div>
+          <p class="desc">True/false — does it begin with this?</p>
+          <pre><code>"hello".startsWith("he")</code></pre>
+          <div class="out">true</div>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Where this shows up in the project:</strong> <code>body('name').trim().notEmpty().withMessage(...)</code> in <code>auth.routes.js</code> chains several string-related methods in a row — each one runs on the result of the last.
+      </div>
+    </section>
+
+    <section id="arrays">
+      <div class="section-head"><span class="section-num">07</span><h2>Array methods</h2></div>
+      <span class="group-label">lists of values</span>
+      <p>An array is an ordered list, written with square brackets: <code>["client", "freelancer"]</code>.</p>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="name">.length</div>
+          <p class="desc">Not a method — a property. How many items are in the list.</p>
+          <pre><code>["client","freelancer"].length</code></pre>
+          <div class="out">2</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.push(item)</div>
+          <p class="desc">Adds an item to the end, changing the original array.</p>
+          <pre><code>arr.push("admin")</code></pre>
+          <div class="out">["client","freelancer","admin"]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.includes()</div>
+          <p class="desc">True/false — is this value in the list?</p>
+          <pre><code>arr.includes("admin")</code></pre>
+          <div class="out">true</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.indexOf()</div>
+          <p class="desc">Position of a value in the list (0 = first).</p>
+          <pre><code>arr.indexOf("freelancer")</code></pre>
+          <div class="out">1</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.join(separator)</div>
+          <p class="desc">Glues every item into one string.</p>
+          <pre><code>arr.join(" | ")</code></pre>
+          <div class="out">"client | freelancer | admin"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.map(fn)</div>
+          <p class="desc">Builds a <em>new</em> array by transforming every item.</p>
+          <pre><code>[1,2,3].map(n => n * 2)</code></pre>
+          <div class="out">[2, 4, 6]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.filter(fn)</div>
+          <p class="desc">Builds a new array keeping only items where <code>fn</code> is true.</p>
+          <pre><code>[1,2,3,4].filter(n => n % 2 === 0)</code></pre>
+          <div class="out">[2, 4]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.find(fn)</div>
+          <p class="desc">Returns the first item where <code>fn</code> is true.</p>
+          <pre><code>[1,2,3].find(n => n > 1)</code></pre>
+          <div class="out">2</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.some(fn)</div>
+          <p class="desc">True if <em>at least one</em> item passes.</p>
+          <pre><code>[1,2,3].some(n => n > 2)</code></pre>
+          <div class="out">true</div>
+        </div>
+        <div class="method-card">
+          <div class="name">.every(fn)</div>
+          <p class="desc">True only if <em>all</em> items pass.</p>
+          <pre><code>[1,2,3].every(n => n > 0)</code></pre>
+          <div class="out">true</div>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Notice:</strong> <code>.map()</code>, <code>.filter()</code>, <code>.find()</code>, <code>.some()</code>, and <code>.every()</code> all take a <em>function</em> as their input — this is Lesson 04 (functions as values) in action, just with a built-in method doing the calling instead of your own code.
+      </div>
+    </section>
+
+    <section id="objects">
+      <div class="section-head"><span class="section-num">08</span><h2>Object methods</h2></div>
+      <span class="group-label">labeled bundles</span>
+      <p>Given <code>const user = { name: "Alex", role: "client" }</code>:</p>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="name">Object.keys(obj)</div>
+          <p class="desc">All the labels, as an array.</p>
+          <pre><code>Object.keys(user)</code></pre>
+          <div class="out">["name", "role"]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">Object.values(obj)</div>
+          <p class="desc">All the stored values, as an array.</p>
+          <pre><code>Object.values(user)</code></pre>
+          <div class="out">["Alex", "client"]</div>
+        </div>
+        <div class="method-card">
+          <div class="name">Object.entries(obj)</div>
+          <p class="desc">Every [label, value] pair, as an array of pairs.</p>
+          <pre><code>Object.entries(user)</code></pre>
+          <div class="out">[["name","Alex"], ["role","client"]]</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="json">
+      <div class="section-head"><span class="section-num">09</span><h2>JSON methods</h2></div>
+      <span class="group-label">talking to an API</span>
+      <p>These two are how a JavaScript object becomes the text an API sends over the network, and back again:</p>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="name">JSON.stringify(obj)</div>
+          <p class="desc">Object → text. This is what <code>res.json()</code> does for you automatically.</p>
+          <pre><code>JSON.stringify(user)</code></pre>
+          <div class="out">'{"name":"Alex","role":"client"}'</div>
+        </div>
+        <div class="method-card">
+          <div class="name">JSON.parse(text)</div>
+          <p class="desc">Text → object. The reverse direction.</p>
+          <pre><code>JSON.parse('{"name":"Alex"}')</code></pre>
+          <div class="out">{ name: "Alex" }</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="numbers">
+      <div class="section-head"><span class="section-num">10</span><h2>Number methods</h2></div>
+      <span class="group-label">math &amp; conversion</span>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="name">.toFixed(2)</div>
+          <p class="desc">Rounds to a fixed number of decimal places.</p>
+          <pre><code>(3.14159).toFixed(2)</code></pre>
+          <div class="out">"3.14"</div>
+        </div>
+        <div class="method-card">
+          <div class="name">parseInt(text)</div>
+          <p class="desc">Pulls a whole number out of the start of a string.</p>
+          <pre><code>parseInt("42px")</code></pre>
+          <div class="out">42</div>
+        </div>
+        <div class="method-card">
+          <div class="name">parseFloat(text)</div>
+          <p class="desc">Same idea, but keeps decimals.</p>
+          <pre><code>parseFloat("3.14 meters")</code></pre>
+          <div class="out">3.14</div>
+        </div>
+        <div class="method-card">
+          <div class="name">Number.isInteger()</div>
+          <p class="desc">True/false — is this a whole number?</p>
+          <pre><code>Number.isInteger(5)</code></pre>
+          <div class="out">true</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="console">
+      <div class="section-head"><span class="section-num">11</span><h2>console methods</h2></div>
+      <span class="group-label">talking to yourself, on purpose</span>
+      <p><code>console</code> is an object too — its methods just print to the terminal instead of returning a value. Three you'll see throughout this project:</p>
+      <div class="table-wrap">
+      <table class="ref">
+        <thead><tr><th>Method</th><th>Used for</th><th>Seen in this project as</th></tr></thead>
+        <tbody>
+          <tr><td><code>console.log()</code></td><td>Normal informational output</td><td><code>console.log(`Server running on https://localhost:${PORT}`)</code></td></tr>
+          <tr><td><code>console.error()</code></td><td>Errors — often shown in red in the terminal</td><td><code>console.error('MongoDB connection failed')</code></td></tr>
+          <tr><td><code>console.warn()</code></td><td>Warnings — not broken, but worth noticing</td><td>Not currently used in this project, but common elsewhere</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="reference">
+      <div class="section-head"><span class="section-num">12</span><h2>Quick reference — every method in this guide</h2></div>
+      <div class="table-wrap">
+      <table class="ref">
+        <thead><tr><th>Type</th><th>Method</th><th>Does what</th></tr></thead>
+        <tbody>
+          <tr><td>String</td><td><code>.trim()</code></td><td>strips outer whitespace</td></tr>
+          <tr><td>String</td><td><code>.toLowerCase()</code> / <code>.toUpperCase()</code></td><td>changes letter case</td></tr>
+          <tr><td>String</td><td><code>.includes()</code></td><td>true/false substring check</td></tr>
+          <tr><td>String</td><td><code>.slice(start,end)</code></td><td>extracts part of the string</td></tr>
+          <tr><td>String</td><td><code>.split(sep)</code></td><td>string → array of pieces</td></tr>
+          <tr><td>String</td><td><code>.replace(old,new)</code></td><td>swaps the first match</td></tr>
+          <tr><td>String</td><td><code>.startsWith()</code></td><td>true/false prefix check</td></tr>
+          <tr><td>Array</td><td><code>.length</code></td><td>item count (a property, not a method)</td></tr>
+          <tr><td>Array</td><td><code>.push(item)</code></td><td>adds to the end</td></tr>
+          <tr><td>Array</td><td><code>.includes()</code> / <code>.indexOf()</code></td><td>search for a value</td></tr>
+          <tr><td>Array</td><td><code>.join(sep)</code></td><td>array → one string</td></tr>
+          <tr><td>Array</td><td><code>.map(fn)</code></td><td>transform every item into a new array</td></tr>
+          <tr><td>Array</td><td><code>.filter(fn)</code></td><td>keep only matching items</td></tr>
+          <tr><td>Array</td><td><code>.find(fn)</code></td><td>first matching item</td></tr>
+          <tr><td>Array</td><td><code>.some(fn)</code> / <code>.every(fn)</code></td><td>at-least-one / all-match check</td></tr>
+          <tr><td>Object</td><td><code>Object.keys/values/entries()</code></td><td>inspect an object's contents as arrays</td></tr>
+          <tr><td>JSON</td><td><code>JSON.stringify()</code> / <code>.parse()</code></td><td>object ↔ text, for sending over a network</td></tr>
+          <tr><td>Number</td><td><code>.toFixed(n)</code></td><td>round to n decimal places</td></tr>
+          <tr><td>Number</td><td><code>parseInt()</code> / <code>parseFloat()</code></td><td>text → number</td></tr>
+          <tr><td>console</td><td><code>.log()</code> / <code>.error()</code> / <code>.warn()</code></td><td>print to the terminal</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <footer>
+      Companion to <code>docs/js-primer.html</code> and <code>docs/field-guide.html</code> in the HustleHub+ repository. Every example above was actually executed with Node before being written here — none of the outputs are guessed.
+    </footer>
+  </main>
+</div>

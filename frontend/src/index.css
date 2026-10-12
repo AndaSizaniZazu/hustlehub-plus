@@ -1,0 +1,22 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #f6f7f9; color: #1d1d1f; }
+.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #1e3a8a; color: #fff; flex-wrap: wrap; gap: 8px; }
+.navbar a { color: #fff; text-decoration: none; margin-right: 12px; }
+.brand { font-weight: 700; font-size: 1.2rem; }
+.nav-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.form { display: flex; flex-direction: column; gap: 8px; max-width: 420px; margin: 24px auto; background: #fff; padding: 24px; border-radius: 8px; }
+input, textarea, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+textarea { min-height: 120px; }
+button, .button { padding: 8px 14px; background: #1e3a8a; color: #fff; border: 0; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+button:disabled { opacity: 0.6; }
+.error { color: #b91c1c; }
+.success { color: #15803d; }
+.gig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.gig-card { background: #fff; padding: 16px; border-radius: 8px; }
+.price { font-weight: 700; }
+.category { color: #555; font-size: 0.9rem; }
+.stats { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.stats div { background: #fff; padding: 12px 20px; border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; background: #fff; margin: 12px 0; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }

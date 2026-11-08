@@ -1,0 +1,62 @@
+# HustleHub+ full stack: MongoDB + Express API + React/nginx client
+# Usage: copy .env.example to .env, set JWT_SECRET, then `docker compose up --build`
+# App: http://localhost:8080
+
+services:
+  mongo:
+    image: mongo:8.0
+    # single-node replica set: bookings use MongoDB transactions, which need one
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }).ok }"
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+    restart: unless-stopped
+    # no published port: the database is only reachable from the API container
+
+  backend:
+    build: ./backend
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGO_URI: ${MONGO_URI:-mongodb://mongo:27017/hustlehub?replicaSet=rs0}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env (see .env.example)}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:8080}
+      AUTH_RATE_LIMIT: ${AUTH_RATE_LIMIT:-5}
+      LOCKOUT_THRESHOLD: ${LOCKOUT_THRESHOLD:-5}
+      LOCKOUT_MINUTES: ${LOCKOUT_MINUTES:-15}
+      TRUST_PROXY: 1 # requests arrive through nginx
+      LOG_LEVEL: ${LOG_LEVEL:-http}
+    volumes:
+      - backend-logs:/app/logs
+      - backend-certs:/app/certs
+    expose:
+      - "5000" # internal only; the browser and Postman go through nginx on 8080
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+  backend-logs:
+  backend-certs:

@@ -1,6 +1,6 @@
 # HustleHub+ — Test Cases (Part 2)
 
-Results recorded on 2026-10-12 against the local stack (API `https://localhost:5000`, frontend `http://localhost:5173`, MongoDB Atlas).
+Results recorded on 2026-10-12 against the local stack (API `https://localhost:5000`, frontend `http://localhost:5173`, MongoDB Atlas). UI-11 through UI-18 were run in the browser on 2026-11-06.
 
 **Status key:** ✅ Pass (executed and observed) · ⬜ To run before submission
 
@@ -114,11 +114,13 @@ Evidence: screenshot of the Newman summary table, `postman/reports/newman-report
 | UI-08 | Client dashboard | My bookings | Booking (confirmed, R 750.00) + transaction with same TXN reference | ✅ |
 | UI-09 | Role guard | Client opens `/freelancer` | Redirected to `/gigs` | ✅ |
 | UI-10 | Income tracked | Log in as freelancer | Total income and booking count increased by the gig price; client listed under Bookings received | ✅ |
-| UI-11 | Freelancer cannot book | Browse gigs as freelancer | No Book button | ⬜ |
-| UI-12 | Edit gig | Dashboard → Edit → change price | New price shown | ⬜ |
-| UI-13 | Delete gig | Dashboard → Delete → confirm | Gig removed | ⬜ |
-| UI-14 | Wrong password | Log in with wrong password | "Invalid email or password" | ⬜ |
-| UI-15 | Login rate limit | 5 failed logins | "Too many attempts. Please try again later." | ⬜ |
-| UI-16 | Duplicate email | Register with existing email | "Registration failed" | ⬜ |
-| UI-17 | Logged-out guard | Log out → open `/client` | Redirected to Login | ⬜ |
-| UI-18 | Server down message | Stop API → try login | "Cannot reach the server" | ⬜ |
+| UI-11 | Freelancer cannot book | Browse gigs as freelancer | No Book button | ✅ |
+| UI-12 | Edit gig | Dashboard → Edit → change price | New price shown | ✅ |
+| UI-13 | Delete gig | Dashboard → Delete → confirm | Gig removed | ✅ |
+| UI-14 | Wrong password | Log in with wrong password | "Invalid email or password" | ✅ |
+| UI-15 | Login rate limit | 5 failed logins, then one more | "Too many attempts. Please try again later." | ✅ |
+| UI-16 | Duplicate email | Register with existing email | "Registration failed" | ✅ |
+| UI-17 | Logged-out guard | Log out → open `/client` | Redirected to Login | ✅ |
+| UI-18 | Server down message | Stop API → try login | "Cannot reach the server. Please try again later." | ✅ |
+
+UI-15: the limiter allows 5 failed logins (`401`), and the next attempt returns `429`. The login page then shows "Too many attempts. Please try again later."

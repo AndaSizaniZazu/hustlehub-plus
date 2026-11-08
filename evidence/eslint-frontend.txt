@@ -1,0 +1,6 @@
+
+C:\Users\user\hustlehub-plus\frontend\src\pages\FreelancerDashboard.test.jsx
+  36:63  warning  Generic Object Injection Sink  security/detect-object-injection
+
+✖ 1 problem (0 errors, 1 warning)
+

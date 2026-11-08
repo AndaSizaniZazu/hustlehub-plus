@@ -24,7 +24,12 @@ export function AuthProvider({ children }) {
     return me.data;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout'); // revokes the token on the server, not just in this tab
+    } catch {
+      // token already expired or server down: still clear it locally
+    }
     sessionStorage.removeItem('token');
     setUser(null);
   };

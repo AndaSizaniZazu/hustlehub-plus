@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 
-const { register, login, getMe } = require('../controllers/auth.controller');
+const { register, login, logout, getMe } = require('../controllers/auth.controller');
 const validate = require('../middleware/validate.middleware');
 const protect = require('../middleware/auth.middleware');
 const { loginLimiter, registerLimiter } = require('../middleware/rateLimit.middleware');
@@ -38,6 +38,7 @@ router.post(
 );
 
 
+router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
 
 module.exports = router;

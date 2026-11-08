@@ -4,15 +4,18 @@ const Gig = require('../models/Gig');
 const Booking = require('../models/Booking');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
+const { logger, requestMeta } = require('../utils/logger');
 
 const createBooking = async (req, res, next) => {
   const session = await mongoose.startSession();
   try {
     const gig = await Gig.findById(req.body.gigId);
     if (!gig) {
+      logger.warn('booking.failed', { ...requestMeta(req), gigId: req.body.gigId, reason: 'gig_not_found' });
       return res.status(404).json({ message: 'Gig not found' });
     }
     if (gig.freelancer.equals(req.user.id)) {
+      logger.warn('booking.failed', { ...requestMeta(req), gigId: gig._id.toString(), reason: 'own_gig' });
       return res.status(400).json({ message: 'You cannot book your own gig' });
     }
 
@@ -54,8 +57,24 @@ const createBooking = async (req, res, next) => {
       );
     });
 
+    logger.info('booking.created', {
+      ...requestMeta(req),
+      bookingId: booking._id.toString(),
+      gigId: gig._id.toString(),
+      freelancerId: gig.freelancer.toString(),
+      amount: booking.priceAtBooking,
+    });
+    logger.info('transaction.recorded', {
+      ...requestMeta(req),
+      transactionId: transaction._id.toString(),
+      reference: transaction.reference,
+      bookingId: booking._id.toString(),
+      amount: transaction.amount,
+      status: transaction.status,
+    });
     return res.status(201).json({ booking, transaction });
   } catch (err) {
+    logger.error('booking.transaction_failed', { ...requestMeta(req), gigId: req.body.gigId, error: err.message });
     next(err);
   } finally {
     await session.endSession();

@@ -5,3 +5,4 @@ backend/certs/
 coverage/
 dist/
 postman/reports/
+logs/

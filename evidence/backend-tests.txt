@@ -1,0 +1,55 @@
+
+> test
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage
+
+(node:17740) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22452) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+=============================== Coverage summary ===============================
+Statements   : 69.51% ( 260/374 )
+Branches     : 61.53% ( 56/91 )
+Functions    : 53.84% ( 21/39 )
+Lines        : 69.31% ( 253/365 )
+================================================================================
+----------------------------|---------|----------|---------|---------|------------------------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                  
+----------------------------|---------|----------|---------|---------|------------------------------------
+All files                   |   69.51 |    61.53 |   53.84 |   69.31 |                                    
+ src                        |   89.47 |    45.45 |   66.66 |   91.89 |                                    
+  app.js                    |   89.47 |    45.45 |   66.66 |   91.89 | 16,45,75                           
+ src/config                 |     100 |      100 |     100 |     100 |                                    
+  tax.js                    |     100 |      100 |     100 |     100 |                                    
+ src/controllers            |   39.53 |     40.9 |    12.5 |   39.53 |                                    
+  auth.controller.js        |   67.74 |    69.23 |      50 |   67.74 | 12-39,89,100,105-113               
+  booking.controller.js     |   28.94 |        0 |       0 |   28.94 | 10-80,85-92,97-104                 
+  gig.controller.js         |   16.98 |        0 |       0 |   16.98 | 5-11,16-23,28-32,37-49,54-71,76-90 
+  transaction.controller.js |   31.57 |        0 |       0 |   31.57 | 6-21,26-35                         
+ src/middleware             |   95.77 |    95.83 |    90.9 |   95.52 |                                    
+  auth.middleware.js        |   95.45 |      100 |     100 |   95.45 | 34                                 
+  rateLimit.middleware.js   |   83.33 |       50 |      50 |   81.81 | 8-9                                
+  requestId.middleware.js   |     100 |      100 |     100 |     100 |                                    
+  role.middleware.js        |     100 |      100 |     100 |     100 |                                    
+  sanitize.middleware.js    |     100 |      100 |     100 |     100 |                                    
+  validate.middleware.js    |     100 |      100 |     100 |     100 |                                    
+ src/models                 |     100 |      100 |     100 |     100 |                                    
+  Booking.js                |     100 |      100 |     100 |     100 |                                    
+  Gig.js                    |     100 |      100 |     100 |     100 |                                    
+  Transaction.js            |     100 |      100 |     100 |     100 |                                    
+  User.js                   |     100 |      100 |     100 |     100 |                                    
+ src/routes                 |   98.03 |      100 |       0 |     100 |                                    
+  auth.routes.js            |     100 |      100 |     100 |     100 |                                    
+  booking.routes.js         |     100 |      100 |     100 |     100 |                                    
+  gig.routes.js             |   94.73 |      100 |       0 |     100 |                                    
+  transaction.routes.js     |     100 |      100 |     100 |     100 |                                    
+ src/utils                  |   88.23 |       75 |     100 |    87.5 |                                    
+  logger.js                 |   84.61 |       75 |     100 |   83.33 | 19-20                              
+  token.js                  |     100 |      100 |     100 |     100 |                                    
+----------------------------|---------|----------|---------|---------|------------------------------------
+
+Test Suites: 4 passed, 4 total
+Tests:       26 passed, 26 total
+Snapshots:   0 total
+Time:        8.061 s
+Ran all test suites.

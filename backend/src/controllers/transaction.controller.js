@@ -1,5 +1,6 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
+const { estimateTax } = require('../config/tax');
 
 const getMyTransactions = async (req, res, next) => {
   try {
@@ -28,7 +29,8 @@ const getIncome = async (req, res, next) => {
       return res.status(404).json({ message: 'User not found' });
     }
     const bookings = await Transaction.countDocuments({ freelancer: req.user.id });
-    return res.status(200).json({ totalIncome: user.totalIncome, bookings });
+    const tax = estimateTax(user.totalIncome);
+    return res.status(200).json({ totalIncome: user.totalIncome, bookings, ...tax });
   } catch (err) {
     next(err);
   }

@@ -29,6 +29,20 @@ const userSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    // account lockout: counts consecutive failed logins for this account
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+    lockUntil: {
+      type: Date,
+      default: null,
+    },
+    // token revocation: bumping this invalidates every JWT issued before
+    tokenVersion: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

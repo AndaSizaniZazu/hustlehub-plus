@@ -1,0 +1,8 @@
+node_modules
+coverage
+logs
+certs
+tests
+.env
+*.pem
+npm-debug.log

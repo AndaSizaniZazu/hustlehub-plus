@@ -1,4 +1,5 @@
 const Gig = require('../models/Gig');
+const { logger, requestMeta } = require('../utils/logger');
 
 const listGigs = async (req, res, next) => {
   try {
@@ -42,6 +43,7 @@ const createGig = async (req, res, next) => {
       price,
       freelancer: req.user.id, // owner comes from the token, never the body
     });
+    logger.info('gig.created', { ...requestMeta(req), gigId: gig._id.toString() });
     return res.status(201).json(gig);
   } catch (err) {
     next(err);
@@ -55,12 +57,14 @@ const updateGig = async (req, res, next) => {
       return res.status(404).json({ message: 'Gig not found' });
     }
     if (!gig.freelancer.equals(req.user.id)) {
+      logger.warn('access.denied_owner', { ...requestMeta(req), gigId: gig._id.toString() });
       return res.status(403).json({ message: 'Forbidden' });
     }
 
     const { title, description, category, price } = req.body;
     Object.assign(gig, { title, description, category, price });
     await gig.save();
+    logger.info('gig.updated', { ...requestMeta(req), gigId: gig._id.toString() });
 
     return res.status(200).json(gig);
   } catch (err) {
@@ -75,10 +79,12 @@ const deleteGig = async (req, res, next) => {
       return res.status(404).json({ message: 'Gig not found' });
     }
     if (!gig.freelancer.equals(req.user.id)) {
+      logger.warn('access.denied_owner', { ...requestMeta(req), gigId: gig._id.toString() });
       return res.status(403).json({ message: 'Forbidden' });
     }
 
     await gig.deleteOne();
+    logger.info('gig.deleted', { ...requestMeta(req), gigId: gig._id.toString() });
     return res.status(204).send();
   } catch (err) {
     next(err);

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//initialize that
 
 const bookingSchema = new mongoose.Schema(
   {

@@ -16,7 +16,7 @@ concurrency:
 jobs:
   backend:
     name: Backend - install, lint, test, audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: backend
@@ -57,7 +57,7 @@ jobs:
 
   frontend:
     name: Frontend - install, lint, test, build, audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: frontend
@@ -98,7 +98,7 @@ jobs:
 
   codeql:
     name: Static analysis - CodeQL
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       security-events: write
@@ -114,7 +114,8 @@ jobs:
 
   docker:
     name: Docker - build images, run stack, API tests
-    runs-on: ubuntu-latest
+    # pinned: MongoDB 8.0 refuses to start on Linux kernel 6.19+ (SERVER-121912), used by newer runners
+    runs-on: ubuntu-24.04
     needs: [backend, frontend]
     steps:
       - uses: actions/checkout@v4

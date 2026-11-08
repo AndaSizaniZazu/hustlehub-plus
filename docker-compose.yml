@@ -4,7 +4,8 @@
 
 services:
   mongo:
-    image: mongo:8.0
+    # 7.0, not 8.0: MongoDB 8.0+ crashes on Linux kernel 6.19+ (SERVER-121912), which CI runners now use
+    image: mongo:7.0
     # single-node replica set: bookings use MongoDB transactions, which need one
     command: ["--replSet", "rs0", "--bind_ip_all"]
     volumes:

@@ -83,7 +83,7 @@ Docker Compose runs three containers on a private network. Only nginx publishes 
 flowchart LR
     B["Browser / Postman"] -->|":8080"| N["frontend<br/>nginx-unprivileged"]
     N -->|"https://backend:5000"| A["backend<br/>node (non-root)"]
-    A -->|"mongodb://mongo:27017 (rs0)"| M[("mongo:8.0<br/>no published port")]
+    A -->|"mongodb://mongo:27017 (rs0)"| M[("mongo:7.0<br/>no published port")]
 ```
 
 ## Project structure
